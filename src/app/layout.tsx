@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 // import Providers from "./providers";
-import { TooltipProvider } from "@/components/common/TooltipWrap";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { ReactNode } from "react";

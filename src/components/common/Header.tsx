@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import NavLink from "./header/NavLink";
 import MobileMenu from "./header/MobileMenu";
 import { HoverHighlight } from "./HoverHighlight";
 import { LogoLink } from "./header/LogoLink";
 import { LandingImage } from "./header/LandingImage";
-import BalanceDisplay from "../ui/BalanceDisplay";
 import { Button } from "../ui/Button";
 import Link from "next/link";
 

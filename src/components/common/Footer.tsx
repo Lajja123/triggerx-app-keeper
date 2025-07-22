@@ -1,12 +1,10 @@
 // components/layout/Footer.tsx
 "use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import { Tooltip } from "antd";
 import Link from "next/link";
 import { FooterNavSection } from "./FooterNavSection";
-
 import logo from "@/assets/footer_svgs/footerLogo.svg";
 import footer1 from "@/assets/footer_svgs/footer1.png";
 import footer2 from "@/assets/footer_svgs/footer2.png";
