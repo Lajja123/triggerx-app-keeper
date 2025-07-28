@@ -1,5 +1,4 @@
-import Image from "next/image";
-import KeeperData from "../components/leaderboard/KeeperData";
+import KeeperData from "../components/keeper/KeeperData";
 
 export default function Home() {
   return (

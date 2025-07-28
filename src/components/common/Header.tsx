@@ -11,9 +11,21 @@ import { Button } from "../ui/Button";
 import Link from "next/link";
 
 const navItems = [
-  { href: "https://app.triggerx.network/devhub", label: "Dev Hub" },
-  { href: "https://app.triggerx.network/dashboard", label: "Dashboard" },
-  { href: "https://app.triggerx.network/leaderboard", label: "Leaderboard" },
+  {
+    href: "https://app.triggerx.network/devhub",
+    label: "Dev Hub",
+    target: "_blank",
+  },
+  {
+    href: "https://app.triggerx.network/dashboard",
+    label: "Dashboard",
+    target: "_blank",
+  },
+  {
+    href: "https://app.triggerx.network/leaderboard",
+    label: "Leaderboard",
+    target: "_blank",
+  },
 ];
 
 const Header: React.FC = () => {

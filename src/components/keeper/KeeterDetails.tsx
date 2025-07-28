@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -28,20 +28,23 @@ const columns = [
   { key: "last_checked_in", label: "Last Checked In", sortable: false },
 ];
 
-const keeperData = [
-  {
-    keeper_name: "mnemonic18",
-    keeper_address: "0x4fdea08bc99e87ab3e68b3aaae2433b9da4cf7c3",
-    consensus_address: "0x4fdea08bc99e87ab3e68b3aaae2433b9da4cf7c3",
-    operator_id: "567890",
-    version: "0.01",
-    peer_id: "12D3KooWMFGp5PsoX9qmCf1QtzLXjpekkDgUjCFELaL2ysfNFB3D",
-    is_active: true,
-    last_checked_in: "0001-01-01T00:00:00Z",
-  },
+interface KeeperData {
+  keeper_name: string;
+  keeper_address: string;
+  consensus_address: string;
+  operator_id: string;
+  version: string;
+  peer_id: string;
+  is_active: boolean;
+  last_checked_in: string;
+}
 
-  // ... rest of your data
-];
+interface ApiResponse {
+  active_keepers: number;
+  keepers: KeeperData[];
+  timestamp: string;
+  total_keepers: number;
+}
 
 const KeeterDetails = ({
   activeTab,
@@ -51,9 +54,76 @@ const KeeterDetails = ({
   searchTerm: string;
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [keeperData, setKeeperData] = useState<KeeperData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 10;
 
-  // Filter data based on active tab and search term
+  // Fetch keeper data from API
+  useEffect(() => {
+    const fetchKeeperData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log("Fetching keeper data...");
+        // Try multiple CORS proxy options
+        const proxyUrls = [
+          "https://api.allorigins.win/get?url=https://health.triggerx.network/operators",
+          "https://corsproxy.io/?https://health.triggerx.network/operators",
+          "https://cors-anywhere.herokuapp.com/https://health.triggerx.network/operators",
+        ];
+
+        let response;
+        let lastError;
+
+        for (const proxyUrl of proxyUrls) {
+          try {
+            console.log(`Trying proxy: ${proxyUrl}`);
+            response = await fetch(proxyUrl);
+            if (response.ok) {
+              break;
+            }
+          } catch (err) {
+            console.log(`Proxy failed: ${proxyUrl}`, err);
+            lastError = err;
+            continue;
+          }
+        }
+        console.log(response);
+        if (!response || !response.ok) {
+          throw (
+            lastError || new Error(`HTTP error! status: ${response?.status}`)
+          );
+        }
+
+        const responseData = await response.json();
+        console.log(responseData);
+
+        // Handle different proxy response formats
+        let data: ApiResponse;
+        if (responseData.contents) {
+          // allorigins.win format
+          data = JSON.parse(responseData.contents);
+        } else {
+          // Direct format
+          data = responseData;
+        }
+
+        console.log("Parsed data:", data);
+        setKeeperData(data.keepers || []);
+      } catch (err) {
+        console.error("Error fetching keeper data:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch keeper data"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchKeeperData();
+  }, []);
+
   const filteredData = keeperData.filter((item) => {
     // Filter by active tab
     const tabFilter =
@@ -91,8 +161,6 @@ const KeeterDetails = ({
 
   return (
     <div className="space-y-4">
-      {/* Results Info */}
-
       <Table>
         <TableHeader>
           <TableRow className="border-gray-800">
@@ -183,7 +251,6 @@ const KeeterDetails = ({
         </TableBody>
       </Table>
 
-      {/* Only show pagination if there are items */}
       {totalItems > 0 && (
         <TablePagination
           currentPage={currentPage}
