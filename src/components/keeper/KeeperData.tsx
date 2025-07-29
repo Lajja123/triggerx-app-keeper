@@ -19,9 +19,9 @@ function KeeperData() {
           See how operators rank based on jobs completed and rewards earned
           weekly.
         </Typography>
-        <div className="flex flex-col xl:flex-row justify-end items-end gap-6 py-4">
-          <div className="flex flex-col xl:flex-row   gap-6 justify-between items-center w-full lg:mb-8">
-            <div className="flex  gap-4 bg-[#181818F0] rounded-lg py-2 px-4 justify-between">
+        <div className="flex flex-col sm:flex-row justify-end items-end gap-6 py-4">
+          <div className="flex flex-col sm:flex-row   gap-6 justify-between items-center w-full lg:mb-8">
+            <div className="flex w-full md:w-auto gap-4 bg-[#181818F0] rounded-lg py-2 px-4 justify-between">
               {tabs.map((tab) => (
                 <button
                   key={tab}

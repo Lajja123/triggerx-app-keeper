@@ -11,6 +11,7 @@ import { Typography } from "../ui/Typography";
 import { LucideCopyButton } from "../ui/CopyButton";
 import { TablePagination } from "../ui/TablePagination";
 import TableSkeleton from "../ui/TableSkeleton";
+import KeeperMobileCard from "./KeeperMobileCard";
 
 // Helper for address truncation
 function truncateAddress(address: string) {
@@ -156,108 +157,122 @@ const KeeterDetails = ({
 
   return (
     <div className="space-y-4">
-      <Table>
-        <TableHeader>
-          <TableRow className="border-gray-800">
-            {columns.map((column) => (
-              <TableHead key={column.key} className="h-14 px-6">
-                <Typography
-                  variant="h4"
-                  color="primary"
-                  align="left"
-                  className="text-nowrap"
-                >
-                  {column.label}
-                </Typography>
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {loading ? (
-            <TableSkeleton columns={columns} rows={10} />
-          ) : error ? (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="px-6 py-8 text-center"
-              >
-                <Typography variant="body" color="error" align="center">
-                  Error: {error}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ) : currentPageData.length > 0 ? (
-            currentPageData.map((item, idx) => (
-              <TableRow key={startIndex + idx} className="text-nowrap">
-                <TableCell
-                  className={`border-l-4 px-6 py-4 ${
-                    item.is_active ? "border-green-500" : "border-red-500"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Typography variant="body" color="primary" align="left">
-                      {item.keeper_name}
-                    </Typography>
-                  </div>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <Typography variant="body" color="gray" align="left">
-                      {truncateAddress(item.keeper_address)}
-                    </Typography>
-                    <LucideCopyButton text={item.keeper_address} />
-                  </div>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <Typography variant="body" color="primary" align="left">
-                    {truncateAddress(item.consensus_address || "-")}
-                  </Typography>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <Typography variant="body" color="primary" align="left">
-                    {item.operator_id || "-"}
-                  </Typography>
-                </TableCell>
-                <TableCell className="px-6 py-4">
+      {/* Desktop Table View - Hidden on mobile */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-gray-800">
+              {columns.map((column) => (
+                <TableHead key={column.key} className="h-14 px-6">
                   <Typography
-                    variant="body"
+                    variant="h4"
                     color="primary"
-                    align="center"
-                    className="bg-[#976fb93e] text-white rounded-full p-1.5 border-[#C07AF6] border"
+                    align="left"
+                    className="text-nowrap"
                   >
-                    {item.version || "-"}
+                    {column.label}
                   </Typography>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <Typography variant="body" color="primary" align="left">
-                    {truncateAddress(item.peer_id)}
-                  </Typography>
-                </TableCell>
-                <TableCell className="px-6 py-4">
-                  <Typography variant="body" color="primary" align="left">
-                    {item.last_checked_in}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {loading ? (
+              <TableSkeleton columns={columns} rows={10} />
+            ) : error ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="px-6 py-8 text-center"
+                >
+                  <Typography variant="body" color="error" align="center">
+                    Error: {error}
                   </Typography>
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="px-6 py-8 text-center"
-              >
-                <Typography variant="body" color="gray" align="center">
-                  {searchTerm
-                    ? `No keepers found matching "${searchTerm}"`
-                    : "No keepers found"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ) : currentPageData.length > 0 ? (
+              currentPageData.map((item, idx) => (
+                <TableRow key={startIndex + idx} className="text-nowrap">
+                  <TableCell
+                    className={`border-l-4 px-6 py-4 ${
+                      item.is_active ? "border-green-500" : "border-red-500"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Typography variant="body" color="primary" align="left">
+                        {item.keeper_name}
+                      </Typography>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <Typography variant="body" color="gray" align="left">
+                        {truncateAddress(item.keeper_address)}
+                      </Typography>
+                      <LucideCopyButton text={item.keeper_address} />
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Typography variant="body" color="primary" align="left">
+                      {truncateAddress(item.consensus_address || "-")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Typography variant="body" color="primary" align="left">
+                      {item.operator_id || "-"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Typography
+                      variant="body"
+                      color="primary"
+                      align="center"
+                      className="bg-[#976fb93e] text-white rounded-full p-1.5 border-[#C07AF6] border"
+                    >
+                      {item.version || "-"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Typography variant="body" color="primary" align="left">
+                      {truncateAddress(item.peer_id)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Typography variant="body" color="primary" align="left">
+                      {item.last_checked_in}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="px-6 py-8 text-center"
+                >
+                  <Typography variant="body" color="gray" align="center">
+                    {searchTerm
+                      ? `No keepers found matching "${searchTerm}"`
+                      : "No keepers found"}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Mobile Card View - Visible only on mobile */}
+      <div className="block md:hidden">
+        <KeeperMobileCard
+          currentPageData={currentPageData}
+          startIndex={startIndex}
+          loading={loading}
+          error={error}
+          searchTerm={searchTerm}
+        />
+      </div>
 
       {!loading && totalItems > 0 && (
         <TablePagination
