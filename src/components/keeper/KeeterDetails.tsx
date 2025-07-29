@@ -10,6 +10,7 @@ import {
 import { Typography } from "../ui/Typography";
 import { LucideCopyButton } from "../ui/CopyButton";
 import { TablePagination } from "../ui/TablePagination";
+import TableSkeleton from "../ui/TableSkeleton";
 
 // Helper for address truncation
 function truncateAddress(address: string) {
@@ -126,9 +127,7 @@ const KeeterDetails = ({
 
   const filteredData = keeperData.filter((item) => {
     // Filter by active tab
-    const tabFilter =
-      activeTab === "All" ||
-      (activeTab === "Active" ? item.is_active : !item.is_active);
+    const tabFilter = activeTab === "Active" ? item.is_active : !item.is_active;
 
     // Filter by keeper address search
     const searchFilter =
@@ -180,7 +179,20 @@ const KeeterDetails = ({
         </TableHeader>
 
         <TableBody>
-          {currentPageData.length > 0 ? (
+          {loading ? (
+            <TableSkeleton columns={columns} rows={10} />
+          ) : error ? (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="px-6 py-8 text-center"
+              >
+                <Typography variant="body" color="error" align="center">
+                  Error: {error}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ) : currentPageData.length > 0 ? (
             currentPageData.map((item, idx) => (
               <TableRow key={startIndex + idx} className="text-nowrap">
                 <TableCell
@@ -251,7 +263,7 @@ const KeeterDetails = ({
         </TableBody>
       </Table>
 
-      {totalItems > 0 && (
+      {!loading && totalItems > 0 && (
         <TablePagination
           currentPage={currentPage}
           onPageChange={setCurrentPage}

@@ -5,9 +5,9 @@ import SearchBar from "../ui/SearchBar";
 import KeeterDetails from "./KeeterDetails";
 
 function KeeperData() {
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState("Active");
   const [searchTerm, setSearchTerm] = useState("");
-  const tabs = ["All", "Active", "Inactive"];
+  const tabs = ["Active", "Inactive"];
 
   return (
     <Suspense>
@@ -26,7 +26,7 @@ function KeeperData() {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 text-sm font-medium border-b-2 ${
+                  className={`px-4 py-2 text-md  border-b-2 ${
                     activeTab === tab
                       ? "border-[#F8FF7C] text-[#F8FF7C]"
                       : "border-transparent text-white "
