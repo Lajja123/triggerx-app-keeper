@@ -67,7 +67,7 @@ const KeeterDetails = ({
       try {
         setLoading(true);
         setError(null);
-        console.log("Fetching operator data...");
+        console.log("Fetching keeper data...");
         // Try multiple CORS proxy options
         const proxyUrls = [
           "https://api.allorigins.win/get?url=https://health.triggerx.network/operators",
@@ -93,7 +93,9 @@ const KeeterDetails = ({
         }
         console.log(response);
         if (!response || !response.ok) {
-          throw lastError || new Error(`Failed to fetch operator data`);
+          throw (
+            lastError || new Error(`HTTP error! status: ${response?.status}`)
+          );
         }
 
         const responseData = await response.json();
@@ -112,8 +114,10 @@ const KeeterDetails = ({
         console.log("Parsed data:", data);
         setKeeperData(data.keepers || []);
       } catch (err) {
-        console.error("Failed to fetch operator data");
-        setError("Failed to fetch operator data");
+        console.error("Error fetching keeper data:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch keeper data"
+        );
       } finally {
         setLoading(false);
       }
