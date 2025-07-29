@@ -108,6 +108,7 @@ const Header: React.FC = () => {
                     isActive={pathname === item.href}
                     className="text-center xl:w-[150px] lg:w-[110px] lg:text-[12px] xl:text-base text-gray-200 hover:text-white"
                     onClick={() => setMenuOpen(false)}
+                    target={item.target}
                   />
                 ))}
               </HoverHighlight>
@@ -115,7 +116,7 @@ const Header: React.FC = () => {
           </div>
 
           <div className=" items-center gap-3  ">
-            <Link href="https://app.triggerx.network/" target="blank">
+            <Link href="https://app.triggerx.network/" target="_blank">
               <Button color="yellow" className="w-[150px]">
                 Get App
               </Button>

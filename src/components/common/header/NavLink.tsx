@@ -10,6 +10,7 @@ export interface NavLinkProps {
   onMouseEnter?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   onClick?: () => void;
   className?: string;
+  target?: string;
 }
 
 const NavLink: React.FC<NavLinkProps> = ({
@@ -19,6 +20,7 @@ const NavLink: React.FC<NavLinkProps> = ({
   onMouseEnter,
   onClick,
   className,
+  target,
 }) => {
   const activeClasses =
     "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]";
@@ -30,6 +32,8 @@ const NavLink: React.FC<NavLinkProps> = ({
         onMouseEnter={onMouseEnter}
         onClick={onClick}
         className={`${baseClasses} ${isActive ? activeClasses : "transparent"} ${className || ""}`}
+        target={target}
+        rel={target === "_blank" ? "noopener noreferrer" : undefined}
       >
         {label}
       </a>
