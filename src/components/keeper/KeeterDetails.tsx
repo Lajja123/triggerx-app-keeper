@@ -61,14 +61,11 @@ const KeeterDetails = ({
   const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 10;
 
-  // Fetch keeper data from API
   useEffect(() => {
     const fetchKeeperData = async () => {
       try {
         setLoading(true);
         setError(null);
-        console.log("Fetching keeper data...");
-        // Try multiple CORS proxy options
         const proxyUrls = [
           "https://api.allorigins.win/get?url=https://health.triggerx.network/operators",
           "https://corsproxy.io/?https://health.triggerx.network/operators",
@@ -86,38 +83,31 @@ const KeeterDetails = ({
               break;
             }
           } catch (err) {
-            console.log(`Proxy failed: ${proxyUrl}`, err);
+            console.log(`Proxy failed: ${proxyUrl}`);
             lastError = err;
             continue;
           }
         }
         console.log(response);
         if (!response || !response.ok) {
-          throw (
-            lastError || new Error(`HTTP error! status: ${response?.status}`)
-          );
+          throw new Error(`fetching operator data`);
         }
 
         const responseData = await response.json();
         console.log(responseData);
 
-        // Handle different proxy response formats
         let data: ApiResponse;
         if (responseData.contents) {
-          // allorigins.win format
           data = JSON.parse(responseData.contents);
         } else {
-          // Direct format
           data = responseData;
         }
 
         console.log("Parsed data:", data);
         setKeeperData(data.keepers || []);
       } catch (err) {
-        console.error("Error fetching keeper data:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch keeper data"
-        );
+        console.error("Error fetching operator data");
+        setError("fetching operator data");
       } finally {
         setLoading(false);
       }
@@ -127,10 +117,8 @@ const KeeterDetails = ({
   }, []);
 
   const filteredData = keeperData.filter((item) => {
-    // Filter by active tab
     const tabFilter = activeTab === "Active" ? item.is_active : !item.is_active;
 
-    // Filter by keeper address search
     const searchFilter =
       searchTerm === "" ||
       item.keeper_address.toLowerCase().includes(searchTerm.toLowerCase());
